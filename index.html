@@ -1,57 +1,42 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>
-        High-Concurrency File Distribution Server
-    </title>
-
+    <title>Optimal Matrix Chain Multiplication</title>
 
     <style>
-
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
         body {
-            background: #f4f6f9;
-            color: #222;
+            font-family: Arial, sans-serif;
+            background: #f4efe7;
+            color: #3d2b1f;
+            min-height: 100vh;
         }
 
-        /* HEADER */
-
         header {
-            background: #172033;
+            background: #5c4033;
             color: white;
-            padding: 20px 50px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
+            padding: 30px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
         header h1 {
-            font-size: 22px;
+            font-size: 30px;
+            margin-bottom: 8px;
         }
 
-        header span {
-            font-size: 14px;
-            color: #b9c3d4;
+        header p {
+            font-size: 15px;
+            opacity: 0.9;
         }
-
-
-        /* MAIN */
 
         .container {
             width: 92%;
@@ -59,1365 +44,1120 @@
             margin: 30px auto;
         }
 
-
-        /* INTRO */
-
-        .intro {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-
-            box-shadow:
-                0 3px 12px rgba(0,0,0,0.08);
-        }
-
-        .intro h2 {
-            margin-bottom: 10px;
-            color: #172033;
-        }
-
-        .intro p {
-            line-height: 1.6;
-            color: #555;
-        }
-
-
-        /* SERVER STATUS */
-
-        .status-card {
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            background: white;
-
-            padding: 20px 25px;
-
-            border-radius: 12px;
-
-            margin-bottom: 25px;
-
-            box-shadow:
-                0 3px 12px rgba(0,0,0,0.08);
-        }
-
-        .server-status {
-
-            display: flex;
-            align-items: center;
-
-            gap: 10px;
-
-            font-weight: bold;
-        }
-
-        .status-dot {
-
-            width: 13px;
-            height: 13px;
-
-            background: #22c55e;
-
-            border-radius: 50%;
-        }
-
-
-        /* DASHBOARD */
-
-        .dashboard {
-
-            display: grid;
-
-            grid-template-columns: 1fr 1fr;
-
-            gap: 25px;
-        }
-
-
-        /* CARD */
-
         .card {
-
             background: white;
-
+            border-radius: 14px;
             padding: 25px;
-
-            border-radius: 12px;
-
-            box-shadow:
-                0 3px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
         }
 
-        .card h3 {
-
-            margin-bottom: 20px;
-
-            color: #172033;
+        .card h2 {
+            color: #5c4033;
+            margin-bottom: 18px;
+            border-bottom: 2px solid #d7c1ad;
+            padding-bottom: 10px;
         }
 
-
-        /* FORM */
+        .input-group {
+            margin-bottom: 18px;
+        }
 
         label {
-
             display: block;
-
-            margin-bottom: 7px;
-
             font-weight: bold;
-
-            font-size: 14px;
+            margin-bottom: 8px;
         }
 
-        input,
-        textarea {
-
+        input {
             width: 100%;
-
             padding: 12px;
-
-            border:
-                1px solid #d5d9e0;
-
-            border-radius: 7px;
-
-            margin-bottom: 15px;
-
+            border: 2px solid #d7c1ad;
+            border-radius: 8px;
+            font-size: 16px;
             outline: none;
-
-            font-size: 14px;
         }
 
-        textarea {
-
-            height: 100px;
-
-            resize: none;
+        input:focus {
+            border-color: #8b5e3c;
         }
-
-        input:focus,
-        textarea:focus {
-
-            border-color: #172033;
-        }
-
-
-        /* BUTTONS */
 
         button {
-
+            background: #6f4e37;
+            color: white;
             border: none;
-
-            padding: 11px 20px;
-
-            border-radius: 7px;
-
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-size: 16px;
             cursor: pointer;
-
-            font-weight: bold;
-
-            margin-right: 8px;
-        }
-
-        .read-btn {
-
-            background: #2563eb;
-
-            color: white;
-        }
-
-        .write-btn {
-
-            background: #16a34a;
-
-            color: white;
-        }
-
-        .clear-btn {
-
-            background: #e5e7eb;
-
-            color: #222;
+            margin-top: 8px;
+            transition: 0.2s;
         }
 
         button:hover {
-
-            opacity: 0.85;
+            background: #4e3426;
+            transform: translateY(-1px);
         }
 
-
-        /* FILE LIST */
-
-        .file-list {
-
-            list-style: none;
+        .secondary-btn {
+            background: #9a7658;
         }
 
-        .file-item {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            padding: 14px;
-
-            background: #f7f8fa;
-
-            border-radius: 7px;
-
-            margin-bottom: 10px;
+        .secondary-btn:hover {
+            background: #76563f;
         }
 
-        .file-name {
-
-            font-weight: bold;
-        }
-
-        .file-size {
-
-            color: #777;
-
-            font-size: 13px;
-        }
-
-
-        /* PROCESS FLOW */
-
-        .process-section {
-
-            margin-top: 25px;
-        }
-
-        .flow {
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            gap: 15px;
-
-            margin-top: 20px;
-        }
-
-        .flow-box {
-
-            flex: 1;
-
-            text-align: center;
-
-            padding: 20px 10px;
-
-            border-radius: 10px;
-
-            background: #f1f5f9;
-
-            border:
-                2px solid #d5dce5;
-        }
-
-        .flow-box h4 {
-
-            margin-bottom: 8px;
-        }
-
-        .flow-box p {
-
-            font-size: 12px;
-
-            color: #666;
-        }
-
-        .arrow {
-
-            font-size: 25px;
-
-            font-weight: bold;
-        }
-
-
-        /* REQUESTS */
-
-        .request {
-
-            background: #f8fafc;
-
-            border-left:
-                5px solid #2563eb;
-
-            padding: 15px;
-
-            margin-bottom: 12px;
-
-            border-radius: 7px;
-        }
-
-        .request.write {
-
-            border-left-color: #16a34a;
-        }
-
-        .request-header {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            margin-bottom: 8px;
-        }
-
-        .request-id {
-
-            font-weight: bold;
-        }
-
-        .request-status {
-
-            color: #16a34a;
-
-            font-size: 13px;
-
-            font-weight: bold;
-        }
-
-        .request-info {
-
-            color: #555;
-
-            font-size: 14px;
-
-            line-height: 1.6;
-        }
-
-
-        /* FILE CONTENT */
-
-        .file-content {
-
-            background: #111827;
-
-            color: #d1d5db;
-
-            padding: 18px;
-
+        .error {
+            background: #ffe1e1;
+            color: #9b2226;
+            padding: 12px;
             border-radius: 8px;
-
-            min-height: 100px;
-
-            white-space: pre-wrap;
-
-            font-family: monospace;
+            margin-top: 15px;
+            display: none;
         }
 
+        .info-box {
+            background: #f4ece4;
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 15px;
+            line-height: 1.7;
+        }
 
-        /* FOOTER */
+        .matrix-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .matrix-card {
+            background: #faf6f1;
+            border: 1px solid #d7c1ad;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .matrix-card h3 {
+            color: #6f4e37;
+            margin-bottom: 8px;
+        }
+
+        .cases {
+            display: grid;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .case {
+            background: #faf6f1;
+            border-left: 5px solid #8b5e3c;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .case-number {
+            font-weight: bold;
+            color: #6f4e37;
+            margin-bottom: 7px;
+        }
+
+        .order {
+            font-family: monospace;
+            font-size: 15px;
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+
+        .cost {
+            font-weight: bold;
+        }
+
+        .optimal {
+            background: #e9f6e9;
+            border: 2px solid #5c8d5c;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .optimal h3 {
+            color: #3d713d;
+            margin-bottom: 15px;
+        }
+
+        .optimal-value {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 500px;
+        }
+
+        th, td {
+            border: 1px solid #cbb7a5;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #6f4e37;
+            color: white;
+        }
+
+        td {
+            background: #fffaf5;
+        }
+
+        td.empty {
+            color: #999;
+            background: #f1ece6;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-box {
+            background: #faf6f1;
+            border: 1px solid #d7c1ad;
+            padding: 18px;
+            border-radius: 10px;
+        }
+
+        .summary-box span {
+            display: block;
+            font-size: 13px;
+            color: #765d4b;
+            margin-bottom: 7px;
+        }
+
+        .summary-box strong {
+            font-size: 18px;
+            color: #4e3426;
+            word-break: break-word;
+        }
+
+        .hidden {
+            display: none;
+        }
 
         footer {
-
-            margin-top: 40px;
-
-            padding: 25px;
-
-            background: #172033;
-
-            color: white;
-
             text-align: center;
+            padding: 25px;
+            color: #765d4b;
+            font-size: 14px;
         }
 
-        footer p {
-
-            color: #b9c3d4;
-
-            font-size: 13px;
-
-            margin-top: 5px;
-        }
-
-
-        /* RESPONSIVE */
-
-        @media (max-width: 800px) {
-
-            .dashboard {
-
-                grid-template-columns: 1fr;
-            }
-
-            .flow {
-
-                flex-direction: column;
-            }
-
-            .arrow {
-
-                transform: rotate(90deg);
-            }
-
-            header {
-
-                padding: 20px;
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 23px;
             }
 
             .container {
-
                 width: 95%;
             }
+
+            .card {
+                padding: 18px;
+            }
         }
-
     </style>
-
 </head>
-
 
 <body>
 
+<header>
+    <h1>Optimal Matrix Chain Multiplication</h1>
+    <p>Dynamic Programming + All Possible Parenthesizations</p>
+</header>
 
-    <!-- HEADER -->
+<div class="container">
 
-    <header>
+    <!-- INPUT -->
+    <div class="card">
+        <h2>Step 1: Enter Matrix Details</h2>
 
-        <div>
-
-            <h1>
-                High-Concurrency File Distribution Server
-            </h1>
-
-            <span>
-                Linux Process & File I/O Management
-            </span>
-
+        <div class="input-group">
+            <label for="matrixCount">Number of Matrices</label>
+            <input
+                type="number"
+                id="matrixCount"
+                min="2"
+                placeholder="Example: 4"
+            >
         </div>
 
-        <div>
+        <button onclick="createDimensionInput()">
+            Continue
+        </button>
 
-            <span>
-                Ubuntu • C • GCC
-            </span>
+        <div id="inputError" class="error"></div>
 
-        </div>
+        <div id="dimensionSection" class="hidden">
 
-    </header>
+            <div class="info-box">
+                <strong>Input Format</strong>
+                <br><br>
 
+                If you have <span id="matrixNumberText"></span> matrices,
+                you need to enter
+                <strong><span id="dimensionNumberText"></span> dimensions.</strong>
 
+                <br><br>
 
-    <!-- MAIN -->
+                Example:
+                <strong>d1 d2 d3 d4 ...</strong>
 
-    <div class="container">
+                <br><br>
 
-
-        <!-- INTRODUCTION -->
-
-        <div class="intro">
-
-            <h2>
-                File Distribution Server
-            </h2>
-
-            <p>
-
-                This system demonstrates a Linux-based
-                high-concurrency file server that handles
-                multiple file requests using separate child
-                processes. The server supports reading
-                existing files and writing data to files
-                stored in the server_files directory.
-
-            </p>
-
-        </div>
-
-
-
-        <!-- SERVER STATUS -->
-
-        <div class="status-card">
-
-            <div class="server-status">
-
-                <div class="status-dot"></div>
-
-                Server Running
-
+                The matrices will be:
+                <div id="formatExample"></div>
             </div>
 
-
-            <div>
-
-                <strong>
-                    Directory:
-                </strong>
-
-                server_files/
-
-            </div>
-
-
-            <div>
-
-                <strong>
-                    Active Processes:
-                </strong>
-
-                <span id="processCount">
-                    0
-                </span>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- READ / WRITE -->
-
-        <div class="dashboard">
-
-
-            <!-- READ -->
-
-            <div class="card">
-
-                <h3>
-                    READ FILE
-                </h3>
-
-
-                <label>
-                    File Name
+            <div class="input-group" style="margin-top:20px;">
+                <label for="dimensions">
+                    Enter all dimensions
                 </label>
-
 
                 <input
                     type="text"
-                    id="readFileName"
-                    placeholder="Enter file name"
+                    id="dimensions"
+                    placeholder="Example: 10 20 30 40 50"
                 >
-
-
-                <button
-                    class="read-btn"
-                    onclick="readFile()">
-
-                    Read File
-
-                </button>
-
-
-                <button
-                    class="clear-btn"
-                    onclick="clearRead()">
-
-                    Clear
-
-                </button>
-
-
-                <br>
-                <br>
-
-
-                <label>
-                    File Content
-                </label>
-
-
-                <div
-                    class="file-content"
-                    id="fileContent">
-
-                    No file selected.
-
-                </div>
-
             </div>
 
+            <button onclick="solveMatrixChain()">
+                Calculate Optimal Order
+            </button>
 
+            <button class="secondary-btn" onclick="resetPage()">
+                Reset
+            </button>
 
-            <!-- WRITE -->
-
-            <div class="card">
-
-                <h3>
-                    WRITE FILE
-                </h3>
-
-
-                <label>
-                    File Name
-                </label>
-
-
-                <input
-                    type="text"
-                    id="writeFileName"
-                    placeholder="Enter file name"
-                >
-
-
-                <label>
-                    Data
-                </label>
-
-
-                <textarea
-                    id="writeData"
-                    placeholder="Enter data to write into the file..."
-                ></textarea>
-
-
-                <button
-                    class="write-btn"
-                    onclick="writeFile()">
-
-                    Write File
-
-                </button>
-
-
-                <button
-                    class="clear-btn"
-                    onclick="clearWrite()">
-
-                    Clear
-
-                </button>
-
-            </div>
-
+            <div id="dimensionError" class="error"></div>
         </div>
+    </div>
 
 
+    <!-- MATRICES -->
+    <div id="matricesSection" class="card hidden">
 
-        <!-- SERVER FILES -->
+        <h2>Step 2: Matrices</h2>
 
-        <div class="card process-section">
-
-            <h3>
-                server_files/
-            </h3>
-
-
-            <ul
-                class="file-list"
-                id="fileList">
-
-                <li
-                    id="emptyFiles"
-                    style="color:#777;">
-
-                    No files available.
-
-                </li>
-
-            </ul>
-
-        </div>
-
-
-
-        <!-- PROCESS FLOW -->
-
-        <div class="card process-section">
-
-            <h3>
-                Request Processing Flow
-            </h3>
-
-
-            <div class="flow">
-
-
-                <div class="flow-box">
-
-                    <h4>
-                        Parent Process
-                    </h4>
-
-                    <p>
-
-                        Receives user request
-                        and sends request
-                        through pipe.
-
-                    </p>
-
-                </div>
-
-
-                <div class="arrow">
-                    →
-                </div>
-
-
-                <div class="flow-box">
-
-                    <h4>
-                        Anonymous Pipe
-                    </h4>
-
-                    <p>
-
-                        Transfers file name
-                        and request data.
-
-                    </p>
-
-                </div>
-
-
-                <div class="arrow">
-                    →
-                </div>
-
-
-                <div class="flow-box">
-
-                    <h4>
-                        Child Process
-                    </h4>
-
-                    <p>
-
-                        Performs the required
-                        file operation.
-
-                    </p>
-
-                </div>
-
-
-                <div class="arrow">
-                    →
-                </div>
-
-
-                <div class="flow-box">
-
-                    <h4>
-                        File I/O
-                    </h4>
-
-                    <p>
-
-                        open() → read()/write()
-                        → close()
-
-                    </p>
-
-                </div>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ACTIVE REQUESTS -->
-
-        <div class="card process-section">
-
-            <h3>
-                Active Requests
-            </h3>
-
-
-            <div id="requests">
-
-                <p
-                    id="noRequests"
-                    style="color:#777;">
-
-                    No active requests.
-
-                </p>
-
-            </div>
-
-        </div>
-
+        <div id="matrixList" class="matrix-list"></div>
 
     </div>
 
 
+    <!-- ALL CASES -->
+    <div id="casesSection" class="card hidden">
 
-    <!-- FOOTER -->
-
-    <footer>
-
-        <strong>
-
-            High-Concurrency File Distribution Server
-
-        </strong>
-
+        <h2>All Possible Multiplication Cases</h2>
 
         <p>
-
-            C • Linux • fork() • pipe()
-            • File I/O • Process Management
-
+            Every possible parenthesization is generated and its
+            scalar multiplication cost is calculated.
         </p>
 
-    </footer>
+        <div id="casesList" class="cases"></div>
+
+    </div>
 
 
+    <!-- DP TABLE -->
+    <div id="dpSection" class="card hidden">
 
-    <!-- JAVASCRIPT -->
+        <h2>Dynamic Programming Cost Table</h2>
 
-    <script>
+        <p>
+            Each cell represents the minimum number of scalar
+            multiplications required for that matrix range.
+        </p>
 
+        <div class="table-container">
+            <table id="dpTable"></table>
+        </div>
 
-        /*
-        =========================================
-        FILE STORAGE
-        =========================================
-
-        Initially there are NO files.
-
-        Files are added only when the user
-        performs a WRITE operation.
-
-        If the same file is written again,
-        the new data is APPENDED to the
-        existing data.
-        */
-
-        let files = {};
-
-        let requestNumber = 0;
-
-        let activeProcesses = 0;
+    </div>
 
 
+    <!-- OPTIMAL RESULT -->
+    <div id="optimalSection" class="card hidden">
 
-        /*
-        =========================================
-        UPDATE PROCESS COUNT
-        =========================================
-        */
+        <h2>Optimal Result</h2>
 
-        function updateProcessCount() {
+        <div class="optimal">
 
-            document.getElementById(
-                "processCount"
-            ).textContent = activeProcesses;
+            <h3>Optimal Parenthesization</h3>
 
+            <div id="optimalOrder" class="optimal-value"></div>
+
+            <h3 style="margin-top:20px;">
+                Minimum Scalar Multiplications
+            </h3>
+
+            <div id="minimumCost" class="optimal-value"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    <div id="summarySection" class="card hidden">
+
+        <h2>Summary</h2>
+
+        <div class="summary">
+
+            <div class="summary-box">
+                <span>Number of Matrices</span>
+                <strong id="summaryMatrices"></strong>
+            </div>
+
+            <div class="summary-box">
+                <span>Number of Possible Cases</span>
+                <strong id="summaryCases"></strong>
+            </div>
+
+            <div class="summary-box">
+                <span>Best Order From Cases</span>
+                <strong id="summaryBestOrder"></strong>
+            </div>
+
+            <div class="summary-box">
+                <span>Minimum Cost</span>
+                <strong id="summaryMinimum"></strong>
+            </div>
+
+            <div class="summary-box">
+                <span>DP Optimal Cost</span>
+                <strong id="summaryDP"></strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    Matrix Chain Multiplication • Dynamic Programming
+</footer>
+
+
+<script>
+
+    let matrixCount = 0;
+    let dimensions = [];
+    let allOrders = [];
+
+
+    /*
+     * ---------------------------------------------------------
+     * Get Matrix Name
+     * ---------------------------------------------------------
+     */
+
+    function getMatrixName(number) {
+
+        if (number <= 26) {
+            return String.fromCharCode(64 + number);
         }
 
+        return "A" + number;
+    }
 
 
-        /*
-        =========================================
-        READ FILE
-        =========================================
-        */
+    /*
+     * ---------------------------------------------------------
+     * Create Dimension Input
+     * ---------------------------------------------------------
+     */
 
-        function readFile() {
+    function createDimensionInput() {
 
-            const fileName =
-                document.getElementById(
-                    "readFileName"
-                ).value.trim();
+        const error = document.getElementById("inputError");
 
+        error.style.display = "none";
 
-            const content =
-                document.getElementById(
-                    "fileContent"
-                );
+        matrixCount = parseInt(
+            document.getElementById("matrixCount").value
+        );
 
+        if (isNaN(matrixCount) || matrixCount < 2) {
 
-            if (fileName === "") {
+            error.innerText =
+                "Please enter at least 2 matrices.";
 
-                alert(
-                    "Please enter a file name."
-                );
+            error.style.display = "block";
 
-                return;
-
-            }
-
-
-            requestNumber++;
-
-            const requestId =
-                requestNumber;
-
-
-            activeProcesses++;
-
-            updateProcessCount();
-
-
-            createRequestCard(
-                requestId,
-                "READ",
-                fileName
-            );
-
-
-            setTimeout(function() {
-
-
-                if (
-                    files.hasOwnProperty(
-                        fileName
-                    )
-                ) {
-
-                    content.textContent =
-                        files[fileName];
-
-
-                    updateRequestStatus(
-                        requestId,
-                        "Completed"
-                    );
-
-                }
-
-                else {
-
-                    content.textContent =
-                        "File not found on server.";
-
-
-                    updateRequestStatus(
-                        requestId,
-                        "File Not Found"
-                    );
-
-                }
-
-
-                setTimeout(function() {
-
-                    activeProcesses--;
-
-                    updateProcessCount();
-
-                }, 1000);
-
-
-            }, 1200);
-
+            return;
         }
 
+        document.getElementById("dimensionSection")
+            .classList.remove("hidden");
+
+        document.getElementById("matrixNumberText")
+            .innerText = matrixCount;
+
+        document.getElementById("dimensionNumberText")
+            .innerText = matrixCount + 1;
 
 
-        /*
-        =========================================
-        WRITE FILE
-        =========================================
-        */
+        let format = "";
 
-        function writeFile() {
+        for (let i = 1; i <= matrixCount; i++) {
 
-            const fileName =
-                document.getElementById(
-                    "writeFileName"
-                ).value.trim();
+            format +=
+                `<strong>${getMatrixName(i)}</strong> = d${i} × d${i + 1}<br>`;
+        }
 
-
-            const data =
-                document.getElementById(
-                    "writeData"
-                ).value;
+        document.getElementById("formatExample")
+            .innerHTML = format;
+    }
 
 
-            if (fileName === "") {
+    /*
+     * ---------------------------------------------------------
+     * Generate All Parenthesizations
+     * ---------------------------------------------------------
+     */
 
-                alert(
-                    "Please enter a file name."
-                );
+    function generateOrders(start, end) {
 
-                return;
+        if (start === end) {
 
+            return [getMatrixName(start)];
+        }
+
+        let result = [];
+
+        for (let k = start; k < end; k++) {
+
+            let leftOrders =
+                generateOrders(start, k);
+
+            let rightOrders =
+                generateOrders(k + 1, end);
+
+            for (let i = 0; i < leftOrders.length; i++) {
+
+                for (let j = 0; j < rightOrders.length; j++) {
+
+                    result.push(
+                        "(" +
+                        leftOrders[i] +
+                        " * " +
+                        rightOrders[j] +
+                        ")"
+                    );
+                }
             }
+        }
+
+        return result;
+    }
 
 
-            if (data.trim() === "") {
+    /*
+     * ---------------------------------------------------------
+     * Calculate Cost of One Parenthesization
+     * ---------------------------------------------------------
+     */
 
-                alert(
-                    "Please enter data."
-                );
+    function calculateCost(order) {
 
-                return;
+        let stack = [];
 
-            }
+        for (let i = 0; i < order.length; i++) {
 
-
-            requestNumber++;
-
-            const requestId =
-                requestNumber;
-
-
-            activeProcesses++;
-
-            updateProcessCount();
-
-
-            createRequestCard(
-                requestId,
-                "WRITE",
-                fileName
-            );
-
+            let character = order[i];
 
             /*
-            =====================================
-            CLEAR INPUTS AFTER SUBMIT
-            =====================================
+             * Matrix
+             */
+            if (
+                character >= "A" &&
+                character <= "Z"
+            ) {
 
-            The entered data will disappear
-            from the form after submitting.
-            */
+                let matrixNumber =
+                    character.charCodeAt(0) - 64;
 
-            document.getElementById(
-                "writeFileName"
-            ).value = "";
+                stack.push({
+                    rows: dimensions[matrixNumber - 1],
+                    columns: dimensions[matrixNumber],
+                    cost: 0
+                });
+            }
+
+            /*
+             * Closing bracket
+             */
+            else if (character === ")") {
+
+                let right = stack.pop();
+                let left = stack.pop();
+
+                let multiplicationCost =
+                    left.rows *
+                    left.columns *
+                    right.columns;
+
+                let totalCost =
+                    left.cost +
+                    right.cost +
+                    multiplicationCost;
+
+                stack.push({
+                    rows: left.rows,
+                    columns: right.columns,
+                    cost: totalCost
+                });
+            }
+        }
+
+        return stack[0].cost;
+    }
 
 
-            document.getElementById(
-                "writeData"
-            ).value = "";
+    /*
+     * ---------------------------------------------------------
+     * Dynamic Programming
+     * ---------------------------------------------------------
+     */
+
+    function dynamicProgramming() {
+
+        let n = matrixCount;
+
+        let dp = Array.from(
+            { length: n + 1 },
+            () => Array(n + 1).fill(0)
+        );
+
+        let split = Array.from(
+            { length: n + 1 },
+            () => Array(n + 1).fill(0)
+        );
 
 
-            setTimeout(function() {
+        /*
+         * Length = number of matrices
+         */
+
+        for (let length = 2; length <= n; length++) {
+
+            for (
+                let i = 1;
+                i <= n - length + 1;
+                i++
+            ) {
+
+                let j = i + length - 1;
+
+                dp[i][j] = Infinity;
 
 
                 /*
-                =================================
-                APPEND DATA
-                =================================
+                 * Try every split
+                 */
 
-                If the file already exists,
-                add the new data to the end.
+                for (let k = i; k < j; k++) {
 
-                If the file does not exist,
-                create a new file.
-                */
+                    let currentCost =
+                        dp[i][k] +
+                        dp[k + 1][j] +
+                        dimensions[i - 1] *
+                        dimensions[k] *
+                        dimensions[j];
 
-                if (
-                    files.hasOwnProperty(
-                        fileName
-                    )
-                ) {
 
-                    files[fileName] +=
-                        "\n" + data;
+                    if (currentCost < dp[i][j]) {
 
+                        dp[i][j] = currentCost;
+
+                        split[i][j] = k;
+                    }
                 }
-
-                else {
-
-                    files[fileName] =
-                        data;
-
-                }
-
-
-                updateRequestStatus(
-                    requestId,
-                    "Completed"
-                );
-
-
-                updateFileList();
-
-
-                setTimeout(function() {
-
-                    activeProcesses--;
-
-                    updateProcessCount();
-
-                }, 1000);
-
-
-            }, 1200);
-
+            }
         }
 
+        return {
+            dp: dp,
+            split: split
+        };
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Get Optimal Parenthesization
+     * ---------------------------------------------------------
+     */
+
+    function getOptimalOrder(split, i, j) {
+
+        if (i === j) {
+
+            return getMatrixName(i);
+        }
+
+        let k = split[i][j];
+
+        return "(" +
+            getOptimalOrder(split, i, k) +
+            " * " +
+            getOptimalOrder(split, k + 1, j) +
+            ")";
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Solve Everything
+     * ---------------------------------------------------------
+     */
+
+    function solveMatrixChain() {
+
+        const error =
+            document.getElementById("dimensionError");
+
+        error.style.display = "none";
 
 
         /*
-        =========================================
-        CREATE REQUEST CARD
-        =========================================
-        */
+         * Read dimensions
+         */
 
-        function createRequestCard(
-            id,
-            type,
-            fileName
+        let input =
+            document.getElementById("dimensions")
+                .value
+                .trim();
+
+
+        dimensions = input
+            .split(/\s+/)
+            .map(Number);
+
+
+        /*
+         * Validate dimensions
+         */
+
+        if (
+            dimensions.length !== matrixCount + 1 ||
+            dimensions.some(
+                value =>
+                    !Number.isInteger(value) ||
+                    value <= 0
+            )
         ) {
 
-            const requests =
-                document.getElementById(
-                    "requests"
-                );
+            error.innerText =
+                `Please enter exactly ${matrixCount + 1} positive integer dimensions.`;
+
+            error.style.display = "block";
+
+            return;
+        }
 
 
-            const noRequests =
-                document.getElementById(
-                    "noRequests"
-                );
+        /*
+         * Display matrices
+         */
+
+        displayMatrices();
 
 
-            if (noRequests) {
+        /*
+         * Generate all cases
+         */
 
-                noRequests.remove();
+        allOrders =
+            generateOrders(1, matrixCount);
 
+
+        displayCases();
+
+
+        /*
+         * Dynamic Programming
+         */
+
+        let result =
+            dynamicProgramming();
+
+        displayDPTable(
+            result.dp
+        );
+
+
+        /*
+         * Optimal order
+         */
+
+        let optimalOrder =
+            getOptimalOrder(
+                result.split,
+                1,
+                matrixCount
+            );
+
+        let dpCost =
+            result.dp[1][matrixCount];
+
+
+        /*
+         * Find best order from all cases
+         */
+
+        let minimumCost = Infinity;
+        let bestOrder = "";
+
+
+        for (
+            let i = 0;
+            i < allOrders.length;
+            i++
+        ) {
+
+            let cost =
+                calculateCost(allOrders[i]);
+
+
+            if (cost < minimumCost) {
+
+                minimumCost = cost;
+
+                bestOrder = allOrders[i];
             }
+        }
 
 
-            const request =
-                document.createElement(
-                    "div"
-                );
+        /*
+         * Display optimal result
+         */
+
+        document.getElementById("optimalOrder")
+            .innerText = optimalOrder;
+
+        document.getElementById("minimumCost")
+            .innerText =
+            dpCost.toLocaleString() +
+            " scalar multiplications";
 
 
-            request.className =
-                "request " +
-                (
-                    type === "WRITE"
-                    ? "write"
-                    : ""
-                );
+        /*
+         * Summary
+         */
+
+        document.getElementById("summaryMatrices")
+            .innerText = matrixCount;
+
+        document.getElementById("summaryCases")
+            .innerText = allOrders.length;
+
+        document.getElementById("summaryBestOrder")
+            .innerText = bestOrder;
+
+        document.getElementById("summaryMinimum")
+            .innerText =
+            minimumCost.toLocaleString();
+
+        document.getElementById("summaryDP")
+            .innerText =
+            dpCost.toLocaleString();
 
 
-            request.id =
-                "request-" + id;
+        /*
+         * Show sections
+         */
+
+        document.getElementById("matricesSection")
+            .classList.remove("hidden");
+
+        document.getElementById("casesSection")
+            .classList.remove("hidden");
+
+        document.getElementById("dpSection")
+            .classList.remove("hidden");
+
+        document.getElementById("optimalSection")
+            .classList.remove("hidden");
+
+        document.getElementById("summarySection")
+            .classList.remove("hidden");
 
 
-            request.innerHTML = `
+        /*
+         * Scroll to result
+         */
 
-                <div class="request-header">
-
-                    <span class="request-id">
-
-                        Request #${id}
-
-                    </span>
+        document.getElementById("matricesSection")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+    }
 
 
-                    <span
-                        class="request-status"
-                        id="status-${id}">
+    /*
+     * ---------------------------------------------------------
+     * Display Matrices
+     * ---------------------------------------------------------
+     */
 
-                        Processing
+    function displayMatrices() {
 
-                    </span>
+        let container =
+            document.getElementById("matrixList");
 
+        container.innerHTML = "";
+
+
+        for (
+            let i = 1;
+            i <= matrixCount;
+            i++
+        ) {
+
+            let card =
+                document.createElement("div");
+
+            card.className = "matrix-card";
+
+            card.innerHTML = `
+                <h3>${getMatrixName(i)}</h3>
+
+                <p>
+                    ${dimensions[i - 1]}
+                    ×
+                    ${dimensions[i]}
+                </p>
+            `;
+
+            container.appendChild(card);
+        }
+    }
+
+
+    /*
+     * ---------------------------------------------------------
+     * Display All Cases
+     * ---------------------------------------------------------
+     */
+
+    function displayCases() {
+
+        let container =
+            document.getElementById("casesList");
+
+        container.innerHTML = "";
+
+
+        let minimum = Infinity;
+
+        for (let order of allOrders) {
+
+            let cost =
+                calculateCost(order);
+
+            if (cost < minimum) {
+                minimum = cost;
+            }
+        }
+
+
+        for (
+            let i = 0;
+            i < allOrders.length;
+            i++
+        ) {
+
+            let order =
+                allOrders[i];
+
+            let cost =
+                calculateCost(order);
+
+
+            let caseBox =
+                document.createElement("div");
+
+            caseBox.className = "case";
+
+
+            caseBox.innerHTML = `
+                <div class="case-number">
+                    Case ${i + 1}
                 </div>
 
-
-                <div class="request-info">
-
-                    Operation:
-                    <strong>${type}</strong>
-
-                    <br>
-
-                    File:
-                    <strong>${fileName}</strong>
-
-                    <br>
-
-                    Process:
-                    <strong>
-                        Child Process ${id}
-                    </strong>
-
-                    <br>
-
-                    IPC:
-                    <strong>
-                        Anonymous Pipe
-                    </strong>
-
+                <div class="order">
+                    Order: ${order}
                 </div>
 
+                <div class="cost">
+                    Cost:
+                    ${cost.toLocaleString()}
+                    scalar multiplications
+                </div>
             `;
 
 
-            requests.prepend(
-                request
-            );
+            if (cost === minimum) {
 
+                caseBox.style.borderLeft =
+                    "5px solid #4d8c4d";
+
+                caseBox.style.background =
+                    "#edf8ed";
+            }
+
+
+            container.appendChild(caseBox);
         }
+    }
 
+
+    /*
+     * ---------------------------------------------------------
+     * Display DP Table
+     * ---------------------------------------------------------
+     */
+
+    function displayDPTable(dp) {
+
+        let table =
+            document.getElementById("dpTable");
+
+        table.innerHTML = "";
 
 
         /*
-        =========================================
-        UPDATE REQUEST STATUS
-        =========================================
-        */
+         * Header
+         */
 
-        function updateRequestStatus(
-            id,
-            status
+        let header =
+            document.createElement("tr");
+
+        header.innerHTML =
+            "<th></th>";
+
+
+        for (
+            let i = 1;
+            i <= matrixCount;
+            i++
         ) {
 
-            const element =
-                document.getElementById(
-                    "status-" + id
-                );
-
-
-            if (element) {
-
-                element.textContent =
-                    status;
-
-            }
-
+            header.innerHTML +=
+                `<th>${getMatrixName(i)}</th>`;
         }
 
 
+        table.appendChild(header);
+
 
         /*
-        =========================================
-        UPDATE FILE LIST
-        =========================================
-        */
+         * Rows
+         */
 
-        function updateFileList() {
+        for (
+            let i = 1;
+            i <= matrixCount;
+            i++
+        ) {
 
-            const fileList =
-                document.getElementById(
-                    "fileList"
-                );
-
-
-            fileList.innerHTML = "";
+            let row =
+                document.createElement("tr");
 
 
-            const fileNames =
-                Object.keys(files);
+            row.innerHTML =
+                `<th>${getMatrixName(i)}</th>`;
 
 
-            if (fileNames.length === 0) {
+            for (
+                let j = 1;
+                j <= matrixCount;
+                j++
+            ) {
 
-                fileList.innerHTML = `
+                if (j < i) {
 
-                    <li
-                        style="color:#777;">
+                    row.innerHTML +=
+                        `<td class="empty">-</td>`;
 
-                        No files available.
+                } else {
 
-                    </li>
-
-                `;
-
-
-                return;
-
-            }
-
-
-            fileNames.forEach(
-                function(fileName) {
-
-                    const item =
-                        document.createElement(
-                            "li"
-                        );
-
-
-                    item.className =
-                        "file-item";
-
-
-                    const size =
-                        new Blob([
-                            files[fileName]
-                        ]).size;
-
-
-                    item.innerHTML = `
-
-                        <span class="file-name">
-
-                            ${fileName}
-
-                        </span>
-
-
-                        <span class="file-size">
-
-                            ${size} bytes
-
-                        </span>
-
-                    `;
-
-
-                    fileList.appendChild(
-                        item
-                    );
-
+                    row.innerHTML +=
+                        `<td>${dp[i][j].toLocaleString()}</td>`;
                 }
-            );
+            }
 
+
+            table.appendChild(row);
         }
+    }
 
 
+    /*
+     * ---------------------------------------------------------
+     * Reset
+     * ---------------------------------------------------------
+     */
 
-        /*
-        =========================================
-        CLEAR READ
-        =========================================
-        */
+    function resetPage() {
 
-        function clearRead() {
+        document.getElementById("matrixCount")
+            .value = "";
 
-            document.getElementById(
-                "readFileName"
-            ).value = "";
+        document.getElementById("dimensions")
+            .value = "";
 
+        document.getElementById("dimensionSection")
+            .classList.add("hidden");
 
-            document.getElementById(
-                "fileContent"
-            ).textContent =
-                "No file selected.";
+        document.getElementById("matricesSection")
+            .classList.add("hidden");
 
-        }
+        document.getElementById("casesSection")
+            .classList.add("hidden");
 
+        document.getElementById("dpSection")
+            .classList.add("hidden");
 
+        document.getElementById("optimalSection")
+            .classList.add("hidden");
 
-        /*
-        =========================================
-        CLEAR WRITE
-        =========================================
-        */
+        document.getElementById("summarySection")
+            .classList.add("hidden");
 
-        function clearWrite() {
+        document.getElementById("inputError")
+            .style.display = "none";
 
-            document.getElementById(
-                "writeFileName"
-            ).value = "";
+        document.getElementById("dimensionError")
+            .style.display = "none";
 
+        matrixCount = 0;
+        dimensions = [];
+        allOrders = [];
+    }
 
-            document.getElementById(
-                "writeData"
-            ).value = "";
-
-        }
-
-
-    </script>
-
+</script>
 
 </body>
-
 </html>
