@@ -1,0 +1,1423 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        High-Concurrency File Distribution Server
+    </title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        /* HEADER */
+
+        header {
+            background: #172033;
+            color: white;
+            padding: 20px 50px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 22px;
+        }
+
+        header span {
+            font-size: 14px;
+            color: #b9c3d4;
+        }
+
+
+        /* MAIN */
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+
+        /* INTRO */
+
+        .intro {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .intro h2 {
+            margin-bottom: 10px;
+            color: #172033;
+        }
+
+        .intro p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+
+        /* SERVER STATUS */
+
+        .status-card {
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: white;
+
+            padding: 20px 25px;
+
+            border-radius: 12px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .server-status {
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            font-weight: bold;
+        }
+
+        .status-dot {
+
+            width: 13px;
+            height: 13px;
+
+            background: #22c55e;
+
+            border-radius: 50%;
+        }
+
+
+        /* DASHBOARD */
+
+        .dashboard {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 25px;
+        }
+
+
+        /* CARD */
+
+        .card {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+
+            margin-bottom: 20px;
+
+            color: #172033;
+        }
+
+
+        /* FORM */
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        input,
+        textarea {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border:
+                1px solid #d5d9e0;
+
+            border-radius: 7px;
+
+            margin-bottom: 15px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        textarea {
+
+            height: 100px;
+
+            resize: none;
+        }
+
+        input:focus,
+        textarea:focus {
+
+            border-color: #172033;
+        }
+
+
+        /* BUTTONS */
+
+        button {
+
+            border: none;
+
+            padding: 11px 20px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            margin-right: 8px;
+        }
+
+        .read-btn {
+
+            background: #2563eb;
+
+            color: white;
+        }
+
+        .write-btn {
+
+            background: #16a34a;
+
+            color: white;
+        }
+
+        .clear-btn {
+
+            background: #e5e7eb;
+
+            color: #222;
+        }
+
+        button:hover {
+
+            opacity: 0.85;
+        }
+
+
+        /* FILE LIST */
+
+        .file-list {
+
+            list-style: none;
+        }
+
+        .file-item {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 14px;
+
+            background: #f7f8fa;
+
+            border-radius: 7px;
+
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+
+            font-weight: bold;
+        }
+
+        .file-size {
+
+            color: #777;
+
+            font-size: 13px;
+        }
+
+
+        /* PROCESS FLOW */
+
+        .process-section {
+
+            margin-top: 25px;
+        }
+
+        .flow {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-top: 20px;
+        }
+
+        .flow-box {
+
+            flex: 1;
+
+            text-align: center;
+
+            padding: 20px 10px;
+
+            border-radius: 10px;
+
+            background: #f1f5f9;
+
+            border:
+                2px solid #d5dce5;
+        }
+
+        .flow-box h4 {
+
+            margin-bottom: 8px;
+        }
+
+        .flow-box p {
+
+            font-size: 12px;
+
+            color: #666;
+        }
+
+        .arrow {
+
+            font-size: 25px;
+
+            font-weight: bold;
+        }
+
+
+        /* REQUESTS */
+
+        .request {
+
+            background: #f8fafc;
+
+            border-left:
+                5px solid #2563eb;
+
+            padding: 15px;
+
+            margin-bottom: 12px;
+
+            border-radius: 7px;
+        }
+
+        .request.write {
+
+            border-left-color: #16a34a;
+        }
+
+        .request-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 8px;
+        }
+
+        .request-id {
+
+            font-weight: bold;
+        }
+
+        .request-status {
+
+            color: #16a34a;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        .request-info {
+
+            color: #555;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+
+        /* FILE CONTENT */
+
+        .file-content {
+
+            background: #111827;
+
+            color: #d1d5db;
+
+            padding: 18px;
+
+            border-radius: 8px;
+
+            min-height: 100px;
+
+            white-space: pre-wrap;
+
+            font-family: monospace;
+        }
+
+
+        /* FOOTER */
+
+        footer {
+
+            margin-top: 40px;
+
+            padding: 25px;
+
+            background: #172033;
+
+            color: white;
+
+            text-align: center;
+        }
+
+        footer p {
+
+            color: #b9c3d4;
+
+            font-size: 13px;
+
+            margin-top: 5px;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media (max-width: 800px) {
+
+            .dashboard {
+
+                grid-template-columns: 1fr;
+            }
+
+            .flow {
+
+                flex-direction: column;
+            }
+
+            .arrow {
+
+                transform: rotate(90deg);
+            }
+
+            header {
+
+                padding: 20px;
+            }
+
+            .container {
+
+                width: 95%;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div>
+
+            <h1>
+                High-Concurrency File Distribution Server
+            </h1>
+
+            <span>
+                Linux Process & File I/O Management
+            </span>
+
+        </div>
+
+        <div>
+
+            <span>
+                Ubuntu • C • GCC
+            </span>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+
+        <!-- INTRODUCTION -->
+
+        <div class="intro">
+
+            <h2>
+                File Distribution Server
+            </h2>
+
+            <p>
+
+                This system demonstrates a Linux-based
+                high-concurrency file server that handles
+                multiple file requests using separate child
+                processes. The server supports reading
+                existing files and writing data to files
+                stored in the server_files directory.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- SERVER STATUS -->
+
+        <div class="status-card">
+
+            <div class="server-status">
+
+                <div class="status-dot"></div>
+
+                Server Running
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Directory:
+                </strong>
+
+                server_files/
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Active Processes:
+                </strong>
+
+                <span id="processCount">
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- READ / WRITE -->
+
+        <div class="dashboard">
+
+
+            <!-- READ -->
+
+            <div class="card">
+
+                <h3>
+                    READ FILE
+                </h3>
+
+
+                <label>
+                    File Name
+                </label>
+
+
+                <input
+                    type="text"
+                    id="readFileName"
+                    placeholder="Enter file name"
+                >
+
+
+                <button
+                    class="read-btn"
+                    onclick="readFile()">
+
+                    Read File
+
+                </button>
+
+
+                <button
+                    class="clear-btn"
+                    onclick="clearRead()">
+
+                    Clear
+
+                </button>
+
+
+                <br>
+                <br>
+
+
+                <label>
+                    File Content
+                </label>
+
+
+                <div
+                    class="file-content"
+                    id="fileContent">
+
+                    No file selected.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- WRITE -->
+
+            <div class="card">
+
+                <h3>
+                    WRITE FILE
+                </h3>
+
+
+                <label>
+                    File Name
+                </label>
+
+
+                <input
+                    type="text"
+                    id="writeFileName"
+                    placeholder="Enter file name"
+                >
+
+
+                <label>
+                    Data
+                </label>
+
+
+                <textarea
+                    id="writeData"
+                    placeholder="Enter data to write into the file..."
+                ></textarea>
+
+
+                <button
+                    class="write-btn"
+                    onclick="writeFile()">
+
+                    Write File
+
+                </button>
+
+
+                <button
+                    class="clear-btn"
+                    onclick="clearWrite()">
+
+                    Clear
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SERVER FILES -->
+
+        <div class="card process-section">
+
+            <h3>
+                server_files/
+            </h3>
+
+
+            <ul
+                class="file-list"
+                id="fileList">
+
+                <li
+                    id="emptyFiles"
+                    style="color:#777;">
+
+                    No files available.
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- PROCESS FLOW -->
+
+        <div class="card process-section">
+
+            <h3>
+                Request Processing Flow
+            </h3>
+
+
+            <div class="flow">
+
+
+                <div class="flow-box">
+
+                    <h4>
+                        Parent Process
+                    </h4>
+
+                    <p>
+
+                        Receives user request
+                        and sends request
+                        through pipe.
+
+                    </p>
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+
+                <div class="flow-box">
+
+                    <h4>
+                        Anonymous Pipe
+                    </h4>
+
+                    <p>
+
+                        Transfers file name
+                        and request data.
+
+                    </p>
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+
+                <div class="flow-box">
+
+                    <h4>
+                        Child Process
+                    </h4>
+
+                    <p>
+
+                        Performs the required
+                        file operation.
+
+                    </p>
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+
+                <div class="flow-box">
+
+                    <h4>
+                        File I/O
+                    </h4>
+
+                    <p>
+
+                        open() → read()/write()
+                        → close()
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ACTIVE REQUESTS -->
+
+        <div class="card process-section">
+
+            <h3>
+                Active Requests
+            </h3>
+
+
+            <div id="requests">
+
+                <p
+                    id="noRequests"
+                    style="color:#777;">
+
+                    No active requests.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <strong>
+
+            High-Concurrency File Distribution Server
+
+        </strong>
+
+
+        <p>
+
+            C • Linux • fork() • pipe()
+            • File I/O • Process Management
+
+        </p>
+
+    </footer>
+
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+
+        /*
+        =========================================
+        FILE STORAGE
+        =========================================
+
+        Initially there are NO files.
+
+        Files are added only when the user
+        performs a WRITE operation.
+
+        If the same file is written again,
+        the new data is APPENDED to the
+        existing data.
+        */
+
+        let files = {};
+
+        let requestNumber = 0;
+
+        let activeProcesses = 0;
+
+
+
+        /*
+        =========================================
+        UPDATE PROCESS COUNT
+        =========================================
+        */
+
+        function updateProcessCount() {
+
+            document.getElementById(
+                "processCount"
+            ).textContent = activeProcesses;
+
+        }
+
+
+
+        /*
+        =========================================
+        READ FILE
+        =========================================
+        */
+
+        function readFile() {
+
+            const fileName =
+                document.getElementById(
+                    "readFileName"
+                ).value.trim();
+
+
+            const content =
+                document.getElementById(
+                    "fileContent"
+                );
+
+
+            if (fileName === "") {
+
+                alert(
+                    "Please enter a file name."
+                );
+
+                return;
+
+            }
+
+
+            requestNumber++;
+
+            const requestId =
+                requestNumber;
+
+
+            activeProcesses++;
+
+            updateProcessCount();
+
+
+            createRequestCard(
+                requestId,
+                "READ",
+                fileName
+            );
+
+
+            setTimeout(function() {
+
+
+                if (
+                    files.hasOwnProperty(
+                        fileName
+                    )
+                ) {
+
+                    content.textContent =
+                        files[fileName];
+
+
+                    updateRequestStatus(
+                        requestId,
+                        "Completed"
+                    );
+
+                }
+
+                else {
+
+                    content.textContent =
+                        "File not found on server.";
+
+
+                    updateRequestStatus(
+                        requestId,
+                        "File Not Found"
+                    );
+
+                }
+
+
+                setTimeout(function() {
+
+                    activeProcesses--;
+
+                    updateProcessCount();
+
+                }, 1000);
+
+
+            }, 1200);
+
+        }
+
+
+
+        /*
+        =========================================
+        WRITE FILE
+        =========================================
+        */
+
+        function writeFile() {
+
+            const fileName =
+                document.getElementById(
+                    "writeFileName"
+                ).value.trim();
+
+
+            const data =
+                document.getElementById(
+                    "writeData"
+                ).value;
+
+
+            if (fileName === "") {
+
+                alert(
+                    "Please enter a file name."
+                );
+
+                return;
+
+            }
+
+
+            if (data.trim() === "") {
+
+                alert(
+                    "Please enter data."
+                );
+
+                return;
+
+            }
+
+
+            requestNumber++;
+
+            const requestId =
+                requestNumber;
+
+
+            activeProcesses++;
+
+            updateProcessCount();
+
+
+            createRequestCard(
+                requestId,
+                "WRITE",
+                fileName
+            );
+
+
+            /*
+            =====================================
+            CLEAR INPUTS AFTER SUBMIT
+            =====================================
+
+            The entered data will disappear
+            from the form after submitting.
+            */
+
+            document.getElementById(
+                "writeFileName"
+            ).value = "";
+
+
+            document.getElementById(
+                "writeData"
+            ).value = "";
+
+
+            setTimeout(function() {
+
+
+                /*
+                =================================
+                APPEND DATA
+                =================================
+
+                If the file already exists,
+                add the new data to the end.
+
+                If the file does not exist,
+                create a new file.
+                */
+
+                if (
+                    files.hasOwnProperty(
+                        fileName
+                    )
+                ) {
+
+                    files[fileName] +=
+                        "\n" + data;
+
+                }
+
+                else {
+
+                    files[fileName] =
+                        data;
+
+                }
+
+
+                updateRequestStatus(
+                    requestId,
+                    "Completed"
+                );
+
+
+                updateFileList();
+
+
+                setTimeout(function() {
+
+                    activeProcesses--;
+
+                    updateProcessCount();
+
+                }, 1000);
+
+
+            }, 1200);
+
+        }
+
+
+
+        /*
+        =========================================
+        CREATE REQUEST CARD
+        =========================================
+        */
+
+        function createRequestCard(
+            id,
+            type,
+            fileName
+        ) {
+
+            const requests =
+                document.getElementById(
+                    "requests"
+                );
+
+
+            const noRequests =
+                document.getElementById(
+                    "noRequests"
+                );
+
+
+            if (noRequests) {
+
+                noRequests.remove();
+
+            }
+
+
+            const request =
+                document.createElement(
+                    "div"
+                );
+
+
+            request.className =
+                "request " +
+                (
+                    type === "WRITE"
+                    ? "write"
+                    : ""
+                );
+
+
+            request.id =
+                "request-" + id;
+
+
+            request.innerHTML = `
+
+                <div class="request-header">
+
+                    <span class="request-id">
+
+                        Request #${id}
+
+                    </span>
+
+
+                    <span
+                        class="request-status"
+                        id="status-${id}">
+
+                        Processing
+
+                    </span>
+
+                </div>
+
+
+                <div class="request-info">
+
+                    Operation:
+                    <strong>${type}</strong>
+
+                    <br>
+
+                    File:
+                    <strong>${fileName}</strong>
+
+                    <br>
+
+                    Process:
+                    <strong>
+                        Child Process ${id}
+                    </strong>
+
+                    <br>
+
+                    IPC:
+                    <strong>
+                        Anonymous Pipe
+                    </strong>
+
+                </div>
+
+            `;
+
+
+            requests.prepend(
+                request
+            );
+
+        }
+
+
+
+        /*
+        =========================================
+        UPDATE REQUEST STATUS
+        =========================================
+        */
+
+        function updateRequestStatus(
+            id,
+            status
+        ) {
+
+            const element =
+                document.getElementById(
+                    "status-" + id
+                );
+
+
+            if (element) {
+
+                element.textContent =
+                    status;
+
+            }
+
+        }
+
+
+
+        /*
+        =========================================
+        UPDATE FILE LIST
+        =========================================
+        */
+
+        function updateFileList() {
+
+            const fileList =
+                document.getElementById(
+                    "fileList"
+                );
+
+
+            fileList.innerHTML = "";
+
+
+            const fileNames =
+                Object.keys(files);
+
+
+            if (fileNames.length === 0) {
+
+                fileList.innerHTML = `
+
+                    <li
+                        style="color:#777;">
+
+                        No files available.
+
+                    </li>
+
+                `;
+
+
+                return;
+
+            }
+
+
+            fileNames.forEach(
+                function(fileName) {
+
+                    const item =
+                        document.createElement(
+                            "li"
+                        );
+
+
+                    item.className =
+                        "file-item";
+
+
+                    const size =
+                        new Blob([
+                            files[fileName]
+                        ]).size;
+
+
+                    item.innerHTML = `
+
+                        <span class="file-name">
+
+                            ${fileName}
+
+                        </span>
+
+
+                        <span class="file-size">
+
+                            ${size} bytes
+
+                        </span>
+
+                    `;
+
+
+                    fileList.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        /*
+        =========================================
+        CLEAR READ
+        =========================================
+        */
+
+        function clearRead() {
+
+            document.getElementById(
+                "readFileName"
+            ).value = "";
+
+
+            document.getElementById(
+                "fileContent"
+            ).textContent =
+                "No file selected.";
+
+        }
+
+
+
+        /*
+        =========================================
+        CLEAR WRITE
+        =========================================
+        */
+
+        function clearWrite() {
+
+            document.getElementById(
+                "writeFileName"
+            ).value = "";
+
+
+            document.getElementById(
+                "writeData"
+            ).value = "";
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
