@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 
 public class OptimalMatrixChain {
@@ -6,10 +5,10 @@ public class OptimalMatrixChain {
     // ---------------------------------------------------------
     // Calculate the cost of one particular multiplication order
     // ---------------------------------------------------------
-    static int calculateCost(int[] dimensions, String order) {
+    static int calculateCost(int[] rows, int[] columns, String order) {
 
-        int[] rows = new int[100];
-        int[] columns = new int[100];
+        int[] resultRows = new int[100];
+        int[] resultColumns = new int[100];
         int[] costs = new int[100];
 
         int top = -1;
@@ -21,12 +20,12 @@ public class OptimalMatrixChain {
             // If the character represents a matrix
             if (ch >= 'A' && ch <= 'Z') {
 
-                int matrixNumber = ch - 'A' + 1;
+                int matrixNumber = ch - 'A';
 
                 top++;
 
-                rows[top] = dimensions[matrixNumber - 1];
-                columns[top] = dimensions[matrixNumber];
+                resultRows[top] = rows[matrixNumber];
+                resultColumns[top] = columns[matrixNumber];
 
                 costs[top] = 0;
             }
@@ -35,14 +34,14 @@ public class OptimalMatrixChain {
             // multiply the two sub-results
             else if (ch == ')') {
 
-                int rightRows = rows[top];
-                int rightColumns = columns[top];
+                int rightRows = resultRows[top];
+                int rightColumns = resultColumns[top];
                 int rightCost = costs[top];
 
                 top--;
 
-                int leftRows = rows[top];
-                int leftColumns = columns[top];
+                int leftRows = resultRows[top];
+                int leftColumns = resultColumns[top];
                 int leftCost = costs[top];
 
                 // Cost of multiplying two matrices
@@ -55,8 +54,8 @@ public class OptimalMatrixChain {
                         + multiplicationCost;
 
                 // Store the resulting matrix
-                rows[top] = leftRows;
-                columns[top] = rightColumns;
+                resultRows[top] = leftRows;
+                resultColumns[top] = rightColumns;
                 costs[top] = totalCost;
             }
         }
@@ -128,13 +127,12 @@ public class OptimalMatrixChain {
 
     // ---------------------------------------------------------
     // Generate matrix name
-    // Supports A, B, C... and then A1, A2... if needed
     // ---------------------------------------------------------
     static String getMatrixName(int number) {
 
-        if (number <= 26) {
+        if (number < 26) {
 
-            char name = (char) ('A' + number - 1);
+            char name = (char) ('A' + number);
 
             return String.valueOf(name);
         }
@@ -147,7 +145,8 @@ public class OptimalMatrixChain {
     // Dynamic Programming algorithm
     // ---------------------------------------------------------
     static int[][] dynamicProgramming(
-            int[] dimensions,
+            int[] rows,
+            int[] columns,
             int n,
             int[][] split) {
 
@@ -166,12 +165,27 @@ public class OptimalMatrixChain {
                 // Try every possible split
                 for (int k = i; k < j; k++) {
 
+                    /*
+                     * For:
+                     *
+                     * (A_i ... A_k) (A_k+1 ... A_j)
+                     *
+                     * The resulting left matrix is:
+                     * rows[i-1] x columns[k-1]
+                     *
+                     * The resulting right matrix is:
+                     * rows[k] x columns[j-1]
+                     *
+                     * Since matrices are compatible:
+                     * columns[k-1] = rows[k]
+                     */
+
                     int currentCost =
                             dp[i][k]
                             + dp[k + 1][j]
-                            + dimensions[i - 1]
-                            * dimensions[k]
-                            * dimensions[j];
+                            + rows[i - 1]
+                            * columns[k - 1]
+                            * columns[j - 1];
 
                     // Store the minimum cost
                     if (currentCost < dp[i][j]) {
@@ -198,7 +212,7 @@ public class OptimalMatrixChain {
 
         if (i == j) {
 
-            System.out.print(getMatrixName(i));
+            System.out.print(getMatrixName(i - 1));
 
             return;
         }
@@ -244,11 +258,16 @@ public class OptimalMatrixChain {
                 "======================================================"
         );
 
+        System.out.println();
+
         System.out.print("       ");
 
         for (int i = 1; i <= n; i++) {
 
-            System.out.printf("%10s", getMatrixName(i));
+            System.out.printf(
+                    "%10s",
+                    getMatrixName(i - 1)
+            );
         }
 
         System.out.println();
@@ -257,14 +276,17 @@ public class OptimalMatrixChain {
 
             System.out.printf(
                     "%5s",
-                    getMatrixName(i)
+                    getMatrixName(i - 1)
             );
 
             for (int j = 1; j <= n; j++) {
 
                 if (j < i) {
 
-                    System.out.printf("%10s", "-");
+                    System.out.printf(
+                            "%10s",
+                            "-"
+                    );
 
                 } else {
 
@@ -310,7 +332,6 @@ public class OptimalMatrixChain {
 
         int n = sc.nextInt();
 
-
         // Check minimum number of matrices
         if (n < 2) {
 
@@ -325,14 +346,15 @@ public class OptimalMatrixChain {
 
 
         // -----------------------------------------------------
-        // STEP 2: Create dimensions array
+        // STEP 2: Create rows and columns arrays
         // -----------------------------------------------------
 
-        int[] dimensions = new int[n + 1];
+        int[] rows = new int[n];
+        int[] columns = new int[n];
 
 
         // -----------------------------------------------------
-        // STEP 3: Explain input format dynamically
+        // STEP 3: Enter rows and columns
         // -----------------------------------------------------
 
         System.out.println();
@@ -342,7 +364,7 @@ public class OptimalMatrixChain {
         );
 
         System.out.println(
-                "                    INPUT FORMAT"
+                "              ENTER MATRIX DIMENSIONS"
         );
 
         System.out.println(
@@ -352,70 +374,30 @@ public class OptimalMatrixChain {
         System.out.println();
 
         System.out.println(
-                "You have entered " + n + " matrices."
-        );
-
-        System.out.println(
-                "Therefore, you must enter "
-                + (n + 1)
-                + " dimensions."
+                "Enter the rows and columns of each matrix separately."
         );
 
         System.out.println();
 
-        System.out.println(
-                "Enter all dimensions in ONE LINE."
-        );
 
-        System.out.println();
-
-        System.out.println(
-                "General format:"
-        );
-
-        System.out.print("d1 d2 d3");
-
-        for (int i = 4; i <= n + 1; i++) {
-
-            System.out.print(" d" + i);
-        }
-
-        System.out.println();
-
-        System.out.println();
-
-        System.out.println(
-                "The matrices will be:"
-        );
-
-        for (int i = 1; i <= n; i++) {
+        for (int i = 0; i < n; i++) {
 
             System.out.println(
-                    getMatrixName(i)
-                    + " = d" + i
-                    + " x d" + (i + 1)
+                    "Matrix " + getMatrixName(i)
             );
-        }
 
-        System.out.println();
+            System.out.print("Enter number of rows: ");
+            rows[i] = sc.nextInt();
 
-        System.out.print(
-                "Enter the dimensions: "
-        );
+            System.out.print("Enter number of columns: ");
+            columns[i] = sc.nextInt();
 
-
-        // -----------------------------------------------------
-        // STEP 4: Read dimensions
-        // -----------------------------------------------------
-
-        for (int i = 0; i <= n; i++) {
-
-            dimensions[i] = sc.nextInt();
+            System.out.println();
         }
 
 
         // -----------------------------------------------------
-        // STEP 5: Display matrices
+        // STEP 4: Display entered matrices
         // -----------------------------------------------------
 
         System.out.println();
@@ -425,27 +407,155 @@ public class OptimalMatrixChain {
         );
 
         System.out.println(
-                "                       MATRICES"
+                "                 ENTERED MATRICES"
         );
 
         System.out.println(
                 "======================================================"
         );
 
-        for (int i = 1; i <= n; i++) {
+        System.out.println();
+
+        for (int i = 0; i < n; i++) {
 
             System.out.println(
                     getMatrixName(i)
                     + " = "
-                    + dimensions[i - 1]
+                    + rows[i]
                     + " x "
-                    + dimensions[i]
+                    + columns[i]
             );
         }
 
 
         // -----------------------------------------------------
-        // STEP 6: Generate all possible multiplication cases
+        // STEP 5: Check matrix compatibility
+        // -----------------------------------------------------
+
+        System.out.println();
+
+        System.out.println(
+                "======================================================"
+        );
+
+        System.out.println(
+                "             CHECKING COMPATIBILITY"
+        );
+
+        System.out.println(
+                "======================================================"
+        );
+
+        System.out.println();
+
+
+        boolean possible = true;
+
+        for (int i = 0; i < n - 1; i++) {
+
+            System.out.println(
+                    "Checking "
+                    + getMatrixName(i)
+                    + " x "
+                    + getMatrixName(i + 1)
+                    + "..."
+            );
+
+            System.out.println(
+                    "Columns of "
+                    + getMatrixName(i)
+                    + " = "
+                    + columns[i]
+            );
+
+            System.out.println(
+                    "Rows of "
+                    + getMatrixName(i + 1)
+                    + " = "
+                    + rows[i + 1]
+            );
+
+
+            if (columns[i] == rows[i + 1]) {
+
+                System.out.println(
+                        "Result: COMPATIBLE"
+                );
+
+            } else {
+
+                System.out.println(
+                        "Result: NOT COMPATIBLE"
+                );
+
+                System.out.println();
+
+                System.out.println(
+                        "Matrix multiplication is NOT possible."
+                );
+
+                System.out.println(
+                        "Columns of "
+                        + getMatrixName(i)
+                        + " ("
+                        + columns[i]
+                        + ") must be equal to rows of "
+                        + getMatrixName(i + 1)
+                        + " ("
+                        + rows[i + 1]
+                        + ")."
+                );
+
+                possible = false;
+
+                break;
+            }
+
+            System.out.println();
+        }
+
+
+        // -----------------------------------------------------
+        // STEP 6: Stop if multiplication is not possible
+        // -----------------------------------------------------
+
+        if (!possible) {
+
+            System.out.println(
+                    "Program stopped because the matrices are incompatible."
+            );
+
+            sc.close();
+
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // STEP 7: All matrices are compatible
+        // -----------------------------------------------------
+
+        System.out.println(
+                "======================================================"
+        );
+
+        System.out.println(
+                "       ALL MATRICES ARE COMPATIBLE"
+        );
+
+        System.out.println(
+                "======================================================"
+        );
+
+        System.out.println();
+
+        System.out.println(
+                "Matrix Chain Multiplication can be performed."
+        );
+
+
+        // -----------------------------------------------------
+        // STEP 8: Generate all possible multiplication cases
         // -----------------------------------------------------
 
         String[] orders = new String[100000];
@@ -453,15 +563,15 @@ public class OptimalMatrixChain {
         int[] count = {0};
 
         generateOrders(
-                1,
-                n,
+                0,
+                n - 1,
                 orders,
                 count
         );
 
 
         // -----------------------------------------------------
-        // STEP 7: Display all possible cases and their costs
+        // STEP 9: Display all possible cases and their costs
         // -----------------------------------------------------
 
         System.out.println();
@@ -478,6 +588,7 @@ public class OptimalMatrixChain {
                 "======================================================"
         );
 
+
         int minimumCost = Integer.MAX_VALUE;
 
         String bestOrder = "";
@@ -489,7 +600,8 @@ public class OptimalMatrixChain {
 
             int cost =
                     calculateCost(
-                            dimensions,
+                            rows,
+                            columns,
                             order
                     );
 
@@ -521,7 +633,7 @@ public class OptimalMatrixChain {
 
 
         // -----------------------------------------------------
-        // STEP 8: Dynamic Programming
+        // STEP 10: Dynamic Programming
         // -----------------------------------------------------
 
         int[][] split =
@@ -529,14 +641,15 @@ public class OptimalMatrixChain {
 
         int[][] dp =
                 dynamicProgramming(
-                        dimensions,
+                        rows,
+                        columns,
                         n,
                         split
                 );
 
 
         // -----------------------------------------------------
-        // STEP 9: Display DP table
+        // STEP 11: Display DP table
         // -----------------------------------------------------
 
         printDPTable(
@@ -546,7 +659,7 @@ public class OptimalMatrixChain {
 
 
         // -----------------------------------------------------
-        // STEP 10: Display optimal result
+        // STEP 12: Display optimal result
         // -----------------------------------------------------
 
         System.out.println();
@@ -586,7 +699,7 @@ public class OptimalMatrixChain {
 
 
         // -----------------------------------------------------
-        // STEP 11: Final summary
+        // STEP 13: Final summary
         // -----------------------------------------------------
 
         System.out.println();
@@ -643,8 +756,5 @@ public class OptimalMatrixChain {
                 "======================================================"
         );
 
+
         sc.close();
-    }
-}
-
-
