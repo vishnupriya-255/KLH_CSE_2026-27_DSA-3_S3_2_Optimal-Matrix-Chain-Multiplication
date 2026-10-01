@@ -1,0 +1,1938 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Optimal Matrix Chain Multiplication</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4efe7;
+            color: #3d2b1f;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #5c4033;
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        header h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            color: #5c4033;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d7c1ad;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #d7c1ad;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #8b5e3c;
+        }
+
+        button {
+            background: #6f4e37;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+            margin-right: 8px;
+        }
+
+        button:hover {
+            background: #4e3426;
+        }
+
+        .reset-btn {
+            background: #9a7658;
+        }
+
+        .reset-btn:hover {
+            background: #76563f;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error {
+            background: #ffe1e1;
+            color: #9b2226;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .success {
+            background: #e8f5e8;
+            color: #356635;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .matrix-input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .matrix-input-card {
+            background: #faf6f1;
+            border: 1px solid #d7c1ad;
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .matrix-input-card h3 {
+            color: #6f4e37;
+            margin-bottom: 15px;
+        }
+
+        .matrix-input-card input {
+            margin-bottom: 10px;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .matrix-card {
+            background: #faf6f1;
+            border: 1px solid #d7c1ad;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .matrix-card h3 {
+            color: #6f4e37;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .matrix-size {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .compatibility-list {
+            margin-top: 20px;
+        }
+
+        .compatibility-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #f8f4ef;
+            border-left: 5px solid #9a7658;
+        }
+
+        .compatible {
+            border-left-color: #4d8c4d;
+            background: #edf8ed;
+        }
+
+        .not-compatible {
+            border-left-color: #b23b3b;
+            background: #fff0f0;
+        }
+
+        .cases {
+            display: grid;
+            gap: 12px;
+        }
+
+        .case {
+            background: #faf6f1;
+            border-left: 5px solid #8b5e3c;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .case.best {
+            background: #edf8ed;
+            border-left-color: #4d8c4d;
+        }
+
+        .case-number {
+            font-weight: bold;
+            color: #6f4e37;
+            margin-bottom: 8px;
+        }
+
+        .order {
+            font-family: monospace;
+            font-size: 15px;
+            margin-bottom: 7px;
+            word-break: break-word;
+        }
+
+        .cost {
+            font-weight: bold;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #cbb7a5;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #6f4e37;
+            color: white;
+        }
+
+        td {
+            background: #fffaf5;
+        }
+
+        td.empty {
+            background: #f1ece6;
+            color: #999;
+        }
+
+        .optimal-box {
+            background: #e9f6e9;
+            border: 2px solid #5c8d5c;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .optimal-box h3 {
+            color: #3d713d;
+            margin-bottom: 10px;
+        }
+
+        .optimal-order {
+            font-family: monospace;
+            font-size: 20px;
+            font-weight: bold;
+            word-break: break-word;
+            margin-bottom: 25px;
+        }
+
+        .minimum-cost {
+            font-size: 22px;
+            font-weight: bold;
+            color: #3d713d;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-box {
+            background: #faf6f1;
+            border: 1px solid #d7c1ad;
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .summary-box span {
+            display: block;
+            color: #765d4b;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .summary-box strong {
+            font-size: 17px;
+            color: #4e3426;
+            word-break: break-word;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #765d4b;
+        }
+
+        @media (max-width: 600px) {
+
+            header h1 {
+                font-size: 23px;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>Optimal Matrix Chain Multiplication</h1>
+
+    <p>
+        Dynamic Programming with Matrix Compatibility Checking
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- STEP 1 -->
+
+    <div class="card">
+
+        <h2>Step 1: Number of Matrices</h2>
+
+        <div class="input-group">
+
+            <label for="matrixCount">
+                Enter the number of matrices
+            </label>
+
+            <input
+                type="number"
+                id="matrixCount"
+                min="2"
+                placeholder="Example: 4"
+            >
+
+        </div>
+
+        <button onclick="createMatrixInputs()">
+            Continue
+        </button>
+
+        <div id="countError" class="error"></div>
+
+    </div>
+
+
+    <!-- STEP 2 -->
+
+    <div id="dimensionSection" class="card hidden">
+
+        <h2>Step 2: Enter Matrix Dimensions</h2>
+
+        <p>
+            Enter the number of rows and columns for each matrix separately.
+        </p>
+
+        <div id="matrixInputs" class="matrix-input-grid"></div>
+
+        <button onclick="processMatrices()">
+            Check Compatibility
+        </button>
+
+        <button class="reset-btn" onclick="resetPage()">
+            Reset
+        </button>
+
+        <div id="dimensionError" class="error"></div>
+
+    </div>
+
+
+    <!-- STEP 3 -->
+
+    <div id="matricesSection" class="card hidden">
+
+        <h2>Step 3: Entered Matrices</h2>
+
+        <div id="matrixList" class="matrix-grid"></div>
+
+    </div>
+
+
+    <!-- STEP 4 -->
+
+    <div id="compatibilitySection" class="card hidden">
+
+        <h2>Step 4: Checking Compatibility</h2>
+
+        <div id="compatibilityList" class="compatibility-list"></div>
+
+        <div id="compatibilityResult"></div>
+
+    </div>
+
+
+    <!-- STEP 5 -->
+
+    <div id="casesSection" class="card hidden">
+
+        <h2>Step 5: All Possible Multiplication Cases</h2>
+
+        <p style="margin-bottom: 18px;">
+            Every possible parenthesization is generated and its
+            scalar multiplication cost is calculated.
+        </p>
+
+        <div id="casesList" class="cases"></div>
+
+    </div>
+
+
+    <!-- STEP 6 -->
+
+    <div id="dpSection" class="card hidden">
+
+        <h2>Step 6: Dynamic Programming Cost Table</h2>
+
+        <p style="margin-bottom: 15px;">
+            The DP table stores the minimum number of scalar
+            multiplications required for each matrix range.
+        </p>
+
+        <div class="table-container">
+
+            <table id="dpTable"></table>
+
+        </div>
+
+    </div>
+
+
+    <!-- STEP 7 -->
+
+    <div id="optimalSection" class="card hidden">
+
+        <h2>Step 7: Optimal Result</h2>
+
+        <div class="optimal-box">
+
+            <h3>
+                Optimal Parenthesization
+            </h3>
+
+            <div
+                id="optimalOrder"
+                class="optimal-order"
+            ></div>
+
+            <h3>
+                Minimum Scalar Multiplications
+            </h3>
+
+            <div
+                id="minimumCost"
+                class="minimum-cost"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- STEP 8 -->
+
+    <div id="summarySection" class="card hidden">
+
+        <h2>Step 8: Final Summary</h2>
+
+        <div class="summary-grid">
+
+            <div class="summary-box">
+
+                <span>
+                    Number of Matrices
+                </span>
+
+                <strong id="summaryMatrices"></strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Number of Possible Cases
+                </span>
+
+                <strong id="summaryCases"></strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Best Order From Cases
+                </span>
+
+                <strong id="summaryBestOrder"></strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    Minimum Cost
+                </span>
+
+                <strong id="summaryMinimum"></strong>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <span>
+                    DP Optimal Cost
+                </span>
+
+                <strong id="summaryDP"></strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    Optimal Matrix Chain Multiplication
+    <br>
+    HTML • CSS • JavaScript • Dynamic Programming
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+   ========================================================= */
+
+let matrixCount = 0;
+
+let rows = [];
+
+let columns = [];
+
+let allOrders = [];
+
+
+
+/* =========================================================
+   GET MATRIX NAME
+   ========================================================= */
+
+function getMatrixName(number) {
+
+    if (number < 26) {
+
+        return String.fromCharCode(
+            65 + number
+        );
+
+    }
+
+    return "A" + number;
+
+}
+
+
+
+/* =========================================================
+   CREATE MATRIX INPUTS
+   ========================================================= */
+
+function createMatrixInputs() {
+
+    const error =
+        document.getElementById("countError");
+
+    error.style.display = "none";
+
+
+    matrixCount =
+        parseInt(
+            document.getElementById("matrixCount").value
+        );
+
+
+    if (
+        isNaN(matrixCount) ||
+        matrixCount < 2
+    ) {
+
+        error.innerText =
+            "Please enter at least 2 matrices.";
+
+        error.style.display = "block";
+
+        return;
+
+    }
+
+
+    const container =
+        document.getElementById("matrixInputs");
+
+    container.innerHTML = "";
+
+
+    for (
+        let i = 0;
+        i < matrixCount;
+        i++
+    ) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "matrix-input-card";
+
+
+        card.innerHTML = `
+
+            <h3>
+                Matrix ${getMatrixName(i)}
+            </h3>
+
+            <label>
+                Number of Rows
+            </label>
+
+            <input
+                type="number"
+                min="1"
+                id="rows-${i}"
+                placeholder="Rows"
+            >
+
+            <label>
+                Number of Columns
+            </label>
+
+            <input
+                type="number"
+                min="1"
+                id="columns-${i}"
+                placeholder="Columns"
+            >
+
+        `;
+
+
+        container.appendChild(card);
+
+    }
+
+
+    document
+        .getElementById("dimensionSection")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("dimensionSection")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+
+/* =========================================================
+   PROCESS MATRICES
+   ========================================================= */
+
+function processMatrices() {
+
+    const error =
+        document.getElementById("dimensionError");
+
+    error.style.display = "none";
+
+
+    rows = [];
+
+    columns = [];
+
+
+    /*
+     * Read all matrix dimensions
+     */
+
+    for (
+        let i = 0;
+        i < matrixCount;
+        i++
+    ) {
+
+        const r =
+            parseInt(
+                document.getElementById(
+                    `rows-${i}`
+                ).value
+            );
+
+
+        const c =
+            parseInt(
+                document.getElementById(
+                    `columns-${i}`
+                ).value
+            );
+
+
+        if (
+            isNaN(r) ||
+            isNaN(c) ||
+            r <= 0 ||
+            c <= 0
+        ) {
+
+            error.innerText =
+                `Please enter valid positive dimensions for Matrix ${getMatrixName(i)}.`;
+
+            error.style.display = "block";
+
+            return;
+
+        }
+
+
+        rows.push(r);
+
+        columns.push(c);
+
+    }
+
+
+    /*
+     * Display matrices
+     */
+
+    displayMatrices();
+
+
+    /*
+     * Check compatibility
+     */
+
+    const possible =
+        checkCompatibility();
+
+
+    if (!possible) {
+
+        /*
+         * Hide algorithm result sections
+         */
+
+        document
+            .getElementById("casesSection")
+            .classList.add("hidden");
+
+        document
+            .getElementById("dpSection")
+            .classList.add("hidden");
+
+        document
+            .getElementById("optimalSection")
+            .classList.add("hidden");
+
+        document
+            .getElementById("summarySection")
+            .classList.add("hidden");
+
+        return;
+
+    }
+
+
+    /*
+     * Generate all possible orders
+     */
+
+    allOrders =
+        generateOrders(
+            0,
+            matrixCount - 1
+        );
+
+
+    /*
+     * Display all cases
+     */
+
+    displayCases();
+
+
+    /*
+     * Dynamic Programming
+     */
+
+    const result =
+        dynamicProgramming();
+
+
+    /*
+     * Display DP table
+     */
+
+    displayDPTable(
+        result.dp
+    );
+
+
+    /*
+     * Get optimal order
+     */
+
+    const optimalOrder =
+        getOptimalOrder(
+            result.split,
+            1,
+            matrixCount
+        );
+
+
+    const optimalCost =
+        result.dp[1][matrixCount];
+
+
+    /*
+     * Find minimum from all cases
+     */
+
+    let minimumCost =
+        Infinity;
+
+    let bestOrder =
+        "";
+
+
+    for (
+        let i = 0;
+        i < allOrders.length;
+        i++
+    ) {
+
+        const cost =
+            calculateCost(
+                allOrders[i]
+            );
+
+
+        if (cost < minimumCost) {
+
+            minimumCost = cost;
+
+            bestOrder =
+                allOrders[i];
+
+        }
+
+    }
+
+
+    /*
+     * Display optimal result
+     */
+
+    document
+        .getElementById("optimalOrder")
+        .innerText =
+        optimalOrder;
+
+
+    document
+        .getElementById("minimumCost")
+        .innerText =
+        optimalCost.toLocaleString() +
+        " scalar multiplications";
+
+
+    /*
+     * Display summary
+     */
+
+    document
+        .getElementById("summaryMatrices")
+        .innerText =
+        matrixCount;
+
+
+    document
+        .getElementById("summaryCases")
+        .innerText =
+        allOrders.length;
+
+
+    document
+        .getElementById("summaryBestOrder")
+        .innerText =
+        bestOrder;
+
+
+    document
+        .getElementById("summaryMinimum")
+        .innerText =
+        minimumCost.toLocaleString();
+
+
+    document
+        .getElementById("summaryDP")
+        .innerText =
+        optimalCost.toLocaleString();
+
+
+    /*
+     * Show sections
+     */
+
+    document
+        .getElementById("casesSection")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("dpSection")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("optimalSection")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("summarySection")
+        .classList.remove("hidden");
+
+
+    /*
+     * Scroll to cases
+     */
+
+    document
+        .getElementById("casesSection")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+
+/* =========================================================
+   DISPLAY MATRICES
+   ========================================================= */
+
+function displayMatrices() {
+
+    const container =
+        document.getElementById("matrixList");
+
+    container.innerHTML = "";
+
+
+    for (
+        let i = 0;
+        i < matrixCount;
+        i++
+    ) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "matrix-card";
+
+
+        card.innerHTML = `
+
+            <h3>
+                ${getMatrixName(i)}
+            </h3>
+
+            <div class="matrix-size">
+
+                ${rows[i]} × ${columns[i]}
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    }
+
+
+    document
+        .getElementById("matricesSection")
+        .classList.remove("hidden");
+
+}
+
+
+
+/* =========================================================
+   CHECK COMPATIBILITY
+   ========================================================= */
+
+function checkCompatibility() {
+
+    const container =
+        document.getElementById(
+            "compatibilityList"
+        );
+
+    const result =
+        document.getElementById(
+            "compatibilityResult"
+        );
+
+
+    container.innerHTML = "";
+
+    result.innerHTML = "";
+
+
+    let possible = true;
+
+
+    /*
+     * Compare every adjacent matrix
+     */
+
+    for (
+        let i = 0;
+        i < matrixCount - 1;
+        i++
+    ) {
+
+        const current =
+            getMatrixName(i);
+
+        const next =
+            getMatrixName(i + 1);
+
+
+        const item =
+            document.createElement("div");
+
+
+        if (
+            columns[i] === rows[i + 1]
+        ) {
+
+            item.className =
+                "compatibility-item compatible";
+
+
+            item.innerHTML = `
+
+                <strong>
+                    Checking ${current} × ${next}
+                </strong>
+
+                <br><br>
+
+                Columns of ${current} =
+                ${columns[i]}
+
+                <br>
+
+                Rows of ${next} =
+                ${rows[i + 1]}
+
+                <br><br>
+
+                <strong>
+                    Result: COMPATIBLE
+                </strong>
+
+            `;
+
+        } else {
+
+            item.className =
+                "compatibility-item not-compatible";
+
+
+            item.innerHTML = `
+
+                <strong>
+                    Checking ${current} × ${next}
+                </strong>
+
+                <br><br>
+
+                Columns of ${current} =
+                ${columns[i]}
+
+                <br>
+
+                Rows of ${next} =
+                ${rows[i + 1]}
+
+                <br><br>
+
+                <strong>
+                    Result: NOT COMPATIBLE
+                </strong>
+
+                <br><br>
+
+                Columns of ${current}
+                (${columns[i]})
+                must be equal to
+                rows of ${next}
+                (${rows[i + 1]}).
+
+            `;
+
+
+            possible = false;
+
+        }
+
+
+        container.appendChild(item);
+
+
+        /*
+         * Stop checking after first mismatch
+         */
+
+        if (!possible) {
+
+            break;
+
+        }
+
+    }
+
+
+    if (possible) {
+
+        result.innerHTML = `
+
+            <div class="success">
+
+                <strong>
+                    ALL MATRICES ARE COMPATIBLE
+                </strong>
+
+                <br><br>
+
+                Matrix Chain Multiplication
+                can be performed.
+
+            </div>
+
+        `;
+
+    } else {
+
+        result.innerHTML = `
+
+            <div class="error"
+                 style="display:block;">
+
+                Matrix multiplication is NOT possible.
+
+                <br><br>
+
+                Please correct the dimensions
+                before continuing.
+
+            </div>
+
+        `;
+
+    }
+
+
+    document
+        .getElementById("compatibilitySection")
+        .classList.remove("hidden");
+
+
+    return possible;
+
+}
+
+
+
+/* =========================================================
+   GENERATE ALL POSSIBLE ORDERS
+   ========================================================= */
+
+function generateOrders(start, end) {
+
+    /*
+     * Only one matrix
+     */
+
+    if (start === end) {
+
+        return [
+            getMatrixName(start)
+        ];
+
+    }
+
+
+    let result = [];
+
+
+    /*
+     * Try every splitting point
+     */
+
+    for (
+        let k = start;
+        k < end;
+        k++
+    ) {
+
+        const leftOrders =
+            generateOrders(
+                start,
+                k
+            );
+
+
+        const rightOrders =
+            generateOrders(
+                k + 1,
+                end
+            );
+
+
+        /*
+         * Combine left and right
+         */
+
+        for (
+            let i = 0;
+            i < leftOrders.length;
+            i++
+        ) {
+
+            for (
+                let j = 0;
+                j < rightOrders.length;
+                j++
+            ) {
+
+                result.push(
+
+                    "(" +
+                    leftOrders[i] +
+                    " * " +
+                    rightOrders[j] +
+                    ")"
+
+                );
+
+            }
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+
+/* =========================================================
+   CALCULATE COST OF ONE ORDER
+   ========================================================= */
+
+function calculateCost(order) {
+
+    let resultRows = [];
+
+    let resultColumns = [];
+
+    let costs = [];
+
+
+    /*
+     * Read each character
+     */
+
+    for (
+        let i = 0;
+        i < order.length;
+        i++
+    ) {
+
+        const ch =
+            order[i];
+
+
+        /*
+         * Matrix
+         */
+
+        if (
+            ch >= "A" &&
+            ch <= "Z"
+        ) {
+
+            const matrixNumber =
+                ch.charCodeAt(0) - 65;
+
+
+            resultRows.push(
+                rows[matrixNumber]
+            );
+
+
+            resultColumns.push(
+                columns[matrixNumber]
+            );
+
+
+            costs.push(0);
+
+        }
+
+
+        /*
+         * Closing bracket
+         */
+
+        else if (ch === ")") {
+
+            const rightRows =
+                resultRows.pop();
+
+            const rightColumns =
+                resultColumns.pop();
+
+            const rightCost =
+                costs.pop();
+
+
+            const leftRows =
+                resultRows.pop();
+
+            const leftColumns =
+                resultColumns.pop();
+
+            const leftCost =
+                costs.pop();
+
+
+            /*
+             * Cost of multiplication
+             */
+
+            const multiplicationCost =
+                leftRows *
+                leftColumns *
+                rightColumns;
+
+
+            const totalCost =
+                leftCost +
+                rightCost +
+                multiplicationCost;
+
+
+            /*
+             * Store result
+             */
+
+            resultRows.push(
+                leftRows
+            );
+
+            resultColumns.push(
+                rightColumns
+            );
+
+            costs.push(
+                totalCost
+            );
+
+        }
+
+    }
+
+
+    return costs[0];
+
+}
+
+
+
+/* =========================================================
+   DISPLAY ALL POSSIBLE CASES
+   ========================================================= */
+
+function displayCases() {
+
+    const container =
+        document.getElementById(
+            "casesList"
+        );
+
+    container.innerHTML = "";
+
+
+    /*
+     * Find minimum cost
+     */
+
+    let minimum =
+        Infinity;
+
+
+    for (
+        let order of allOrders
+    ) {
+
+        const cost =
+            calculateCost(order);
+
+
+        if (cost < minimum) {
+
+            minimum = cost;
+
+        }
+
+    }
+
+
+    /*
+     * Display every case
+     */
+
+    for (
+        let i = 0;
+        i < allOrders.length;
+        i++
+    ) {
+
+        const order =
+            allOrders[i];
+
+
+        const cost =
+            calculateCost(order);
+
+
+        const caseBox =
+            document.createElement("div");
+
+
+        caseBox.className =
+            "case";
+
+
+        if (cost === minimum) {
+
+            caseBox.classList.add("best");
+
+        }
+
+
+        caseBox.innerHTML = `
+
+            <div class="case-number">
+
+                Case ${i + 1}
+
+            </div>
+
+            <div class="order">
+
+                Order:
+                ${order}
+
+            </div>
+
+            <div class="cost">
+
+                Cost:
+                ${cost.toLocaleString()}
+                scalar multiplications
+
+            </div>
+
+        `;
+
+
+        container.appendChild(
+            caseBox
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   DYNAMIC PROGRAMMING
+   ========================================================= */
+
+function dynamicProgramming() {
+
+    const n =
+        matrixCount;
+
+
+    /*
+     * Create DP table
+     */
+
+    const dp =
+        Array.from(
+            {
+                length: n + 1
+            },
+            () =>
+                Array(n + 1).fill(0)
+        );
+
+
+    /*
+     * Create split table
+     */
+
+    const split =
+        Array.from(
+            {
+                length: n + 1
+            },
+            () =>
+                Array(n + 1).fill(0)
+        );
+
+
+    /*
+     * Length = number of matrices
+     */
+
+    for (
+        let length = 2;
+        length <= n;
+        length++
+    ) {
+
+        for (
+            let i = 1;
+            i <= n - length + 1;
+            i++
+        ) {
+
+            const j =
+                i + length - 1;
+
+
+            dp[i][j] =
+                Infinity;
+
+
+            /*
+             * Try every split
+             */
+
+            for (
+                let k = i;
+                k < j;
+                k++
+            ) {
+
+                /*
+                 * Same formula as Java program:
+                 *
+                 * dp[i][k]
+                 * + dp[k+1][j]
+                 * + rows[i-1]
+                 * * columns[k-1]
+                 * * columns[j-1]
+                 */
+
+                const currentCost =
+
+                    dp[i][k] +
+
+                    dp[k + 1][j] +
+
+                    rows[i - 1] *
+                    columns[k - 1] *
+                    columns[j - 1];
+
+
+                /*
+                 * Store minimum
+                 */
+
+                if (
+                    currentCost <
+                    dp[i][j]
+                ) {
+
+                    dp[i][j] =
+                        currentCost;
+
+                    split[i][j] =
+                        k;
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    return {
+        dp: dp,
+        split: split
+    };
+
+}
+
+
+
+/* =========================================================
+   GET OPTIMAL PARENTHESIZATION
+   ========================================================= */
+
+function getOptimalOrder(
+    split,
+    i,
+    j
+) {
+
+    /*
+     * Only one matrix
+     */
+
+    if (i === j) {
+
+        return getMatrixName(
+            i - 1
+        );
+
+    }
+
+
+    const k =
+        split[i][j];
+
+
+    return (
+
+        "(" +
+
+        getOptimalOrder(
+            split,
+            i,
+            k
+        ) +
+
+        " * " +
+
+        getOptimalOrder(
+            split,
+            k + 1,
+            j
+        ) +
+
+        ")"
+
+    );
+
+}
+
+
+
+/* =========================================================
+   DISPLAY DP TABLE
+   ========================================================= */
+
+function displayDPTable(dp) {
+
+    const table =
+        document.getElementById(
+            "dpTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    /*
+     * Header
+     */
+
+    let header =
+        document.createElement("tr");
+
+
+    header.innerHTML =
+        "<th></th>";
+
+
+    for (
+        let i = 1;
+        i <= matrixCount;
+        i++
+    ) {
+
+        header.innerHTML +=
+
+            `<th>
+                ${getMatrixName(i - 1)}
+             </th>`;
+
+    }
+
+
+    table.appendChild(
+        header
+    );
+
+
+    /*
+     * Rows
+     */
+
+    for (
+        let i = 1;
+        i <= matrixCount;
+        i++
+    ) {
+
+        let row =
+            document.createElement("tr");
+
+
+        row.innerHTML =
+
+            `<th>
+                ${getMatrixName(i - 1)}
+             </th>`;
+
+
+        for (
+            let j = 1;
+            j <= matrixCount;
+            j++
+        ) {
+
+            if (j < i) {
+
+                row.innerHTML +=
+                    `<td class="empty">-</td>`;
+
+            } else {
+
+                row.innerHTML +=
+
+                    `<td>
+                        ${dp[i][j].toLocaleString()}
+                     </td>`;
+
+            }
+
+        }
+
+
+        table.appendChild(
+            row
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetPage() {
+
+    /*
+     * Clear input
+     */
+
+    document
+        .getElementById("matrixCount")
+        .value = "";
+
+
+    document
+        .getElementById("matrixInputs")
+        .innerHTML = "";
+
+
+    /*
+     * Hide sections
+     */
+
+    const sections = [
+
+        "dimensionSection",
+
+        "matricesSection",
+
+        "compatibilitySection",
+
+        "casesSection",
+
+        "dpSection",
+
+        "optimalSection",
+
+        "summarySection"
+
+    ];
+
+
+    sections.forEach(
+        id => {
+
+            document
+                .getElementById(id)
+                .classList.add("hidden");
+
+        }
+    );
+
+
+    /*
+     * Clear errors
+     */
+
+    document
+        .getElementById("countError")
+        .style.display = "none";
+
+
+    document
+        .getElementById("dimensionError")
+        .style.display = "none";
+
+
+    /*
+     * Reset variables
+     */
+
+    matrixCount = 0;
+
+    rows = [];
+
+    columns = [];
+
+    allOrders = [];
+
+}
+
+</script>
+
+
+</body>
+
+</html>
+```
